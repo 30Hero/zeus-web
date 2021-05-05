@@ -1,0 +1,21 @@
+export default {
+  operationFailed: 'Operation failed',
+  errorTip: 'Error Tip',
+  errorMessage: 'The operation failed, the system is abnormal!',
+  timeoutMessage: 'Login timed out, please log in again!',
+  apiTimeoutMessage: 'The interface request timed out, please refresh the page and try again!',
+  networkException: 'Lỗi mạng!',
+  networkExceptionMsg: 'Kết nối của bạn có vấn đề. Vui lòng kiểm tra lại!',
+
+  errMsg401: 'Hết session, vui lòng login lại!',
+  errMsg403: 'The user is authorized, but access is forbidden!',
+  errMsg404: 'Lỗi mạng, vui lòng liên hệ với admin!',
+  errMsg405: 'Network request error, request method not allowed!',
+  errMsg408: 'Network request timed out!',
+  errMsg500: 'Lỗi không mong muốn đã xảy ra, vui lòng liên hệ với admin!',
+  errMsg501: 'The network is not implemented!',
+  errMsg502: 'Network Error!',
+  errMsg503: 'The service is unavailable, the server is temporarily overloaded or maintained!',
+  errMsg504: 'Network timeout!',
+  errMsg505: 'The http version does not support the request!',
+};

@@ -5,11 +5,11 @@
 <h1>EMC admin</h1>
 </div>
 
-**English** | [Vietnamese](./README.vi-VN.md)
+**Vietnamese** | [English](./README.md)
 
 ## Introduction
 
-Garment Management System
+Hệ thống quản lý may mặc
 
 ## License
 

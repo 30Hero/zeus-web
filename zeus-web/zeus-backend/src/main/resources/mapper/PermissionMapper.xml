@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="vn.zeus.web.mapper.PermissionMapper">
+	<sql id="sqlSelect">
+		SELECT * FROM permission
+	</sql>
+
+	<sql id="sqlSelectWhere">
+		<include refid="sqlSelect"/>
+		<where>
+			<if test="id != null">AND id = #{id}</if>
+			<if test="screenId != null">AND screen_id = #{screenId}</if>
+			<if test="screenName != null">AND screen_name = #{screenName}</if>
+			<if test="functionId != null">AND function_id = #{functionId}</if>
+			<if test="functionName != null">AND function_name = #{functionName}</if>
+			<if test="actionId != null">AND action_id = #{actionId}</if>
+			<if test="actionName != null">AND action_name = #{actionName}</if>
+			<if test="version != null">AND version = #{version}</if>
+			<if test="createdAt != null">AND created_at = #{createdAt}</if>
+			<if test="updatedAt != null">AND updated_at = #{updatedAt}</if>
+			<if test="updatedBy != null">AND updated_by = #{updatedBy}</if>
+		</where>
+	</sql>
+
+	<select id="selectById" parameterType="Long" resultType="Permission">
+		<include refid="sqlSelect"/>
+		WHERE
+		id = #{id}
+	</select>
+
+	<select id="selectOne" parameterType="Permission" resultType="Permission">
+		<include refid="sqlSelectWhere"/>
+		LIMIT 1
+	</select>
+
+	 <select id="selectList" parameterType="Permission" resultType="Permission">
+		<include refid="sqlSelectWhere"/>
+	</select>
+
+	<insert id="insertOne" parameterType="Permission">
+		INSERT INTO permission
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="screenId != null">screen_id,</if>
+			<if test="screenName != null">screen_name,</if>
+			<if test="functionId != null">function_id,</if>
+			<if test="functionName != null">function_name,</if>
+			<if test="actionId != null">action_id,</if>
+			<if test="actionName != null">action_name,</if>
+			<if test="updatedBy != null">updated_by,</if>
+			version,
+			created_at,
+			updated_at
+		</trim>
+		VALUES
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="screenId != null">#{screenId},</if>
+			<if test="screenName != null">#{screenName},</if>
+			<if test="functionId != null">#{functionId},</if>
+			<if test="functionName != null">#{functionName},</if>
+			<if test="actionId != null">#{actionId},</if>
+			<if test="actionName != null">#{actionName},</if>
+			<if test="updatedBy != null">#{updatedBy},</if>
+			1,
+			NOW(),
+			NOW()
+		</trim>
+	</insert>
+
+	<update id="update" parameterType="Permission">
+		UPDATE permission
+		<trim prefix="SET" suffixOverrides=",">
+			 <if test="screenId != null">screen_id = #{screenId}</if>
+			 <if test="screenName != null">screen_name = #{screenName}</if>
+			 <if test="functionId != null">function_id = #{functionId}</if>
+			 <if test="functionName != null">function_name = #{functionName}</if>
+			 <if test="actionId != null">action_id = #{actionId}</if>
+			 <if test="actionName != null">action_name = #{actionName}</if>
+			 <if test="updatedBy != null">updated_by = #{updatedBy}</if>
+			version = version + 1,
+			updated_at = NOW()
+		</trim>
+		WHERE id = #{id}
+	</update>
+
+	<delete id="deleteOne">
+		 DELETE FROM permission WHERE id = #{id}
+	</delete>
+
+	<delete id="deleteList">
+		DELETE FROM permission WHERE id IN
+		<foreach item="id" collection="ids" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+	</delete>
+
+</mapper>

@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="vn.zeus.web.mapper.RoleMapper">
+	<sql id="sqlSelect">
+		SELECT * FROM role
+	</sql>
+
+	<sql id="sqlSelectWhere">
+		<include refid="sqlSelect"/>
+		<where>
+			<if test="id != null">AND id = #{id}</if>
+			<if test="name != null">AND name = #{name}</if>
+			<if test="description != null">AND description = #{description}</if>
+			<if test="delFlag != null">AND del_flag = #{delFlag}</if>
+			<if test="version != null">AND version = #{version}</if>
+			<if test="createdAt != null">AND created_at = #{createdAt}</if>
+			<if test="updatedAt != null">AND updated_at = #{updatedAt}</if>
+			<if test="updatedBy != null">AND updated_by = #{updatedBy}</if>
+		</where>
+	</sql>
+
+	<select id="selectById" parameterType="Long" resultType="Role">
+		<include refid="sqlSelect"/>
+		WHERE
+		id = #{id}
+	</select>
+
+	<select id="selectOne" parameterType="Role" resultType="Role">
+		<include refid="sqlSelectWhere"/>
+		LIMIT 1
+	</select>
+
+	 <select id="selectList" parameterType="Role" resultType="Role">
+		<include refid="sqlSelectWhere"/>
+	</select>
+
+	<insert id="insertOne" parameterType="Role">
+		INSERT INTO role
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="name != null">name,</if>
+			<if test="description != null">description,</if>
+			<if test="delFlag != null">del_flag,</if>
+			<if test="updatedBy != null">updated_by,</if>
+			version,
+			created_at,
+			updated_at
+		</trim>
+		VALUES
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="name != null">#{name},</if>
+			<if test="description != null">#{description},</if>
+			<if test="delFlag != null">#{delFlag},</if>
+			<if test="updatedBy != null">#{updatedBy},</if>
+			1,
+			NOW(),
+			NOW()
+		</trim>
+	</insert>
+
+	<update id="update" parameterType="Role">
+		UPDATE role
+		<trim prefix="SET" suffixOverrides=",">
+			 <if test="name != null">name = #{name}</if>
+			 <if test="description != null">description = #{description}</if>
+			 <if test="delFlag != null">del_flag = #{delFlag}</if>
+			 <if test="updatedBy != null">updated_by = #{updatedBy}</if>
+			version = version + 1,
+			updated_at = NOW()
+		</trim>
+		WHERE id = #{id}
+	</update>
+
+	<delete id="deleteOne">
+		 DELETE FROM role WHERE id = #{id}
+	</delete>
+
+	<delete id="deleteList">
+		DELETE FROM role WHERE id IN
+		<foreach item="id" collection="ids" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+	</delete>
+
+</mapper>

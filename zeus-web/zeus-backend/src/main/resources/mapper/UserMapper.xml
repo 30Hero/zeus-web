@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="vn.zeus.web.mapper.UserMapper">
+	<sql id="sqlSelect">
+		SELECT * FROM user
+	</sql>
+
+	<sql id="sqlSelectWhere">
+		<include refid="sqlSelect" />
+		<where>
+			<if test="id != null">and id = #{id}</if>
+			<if test="userName != null">and user_name = #{userName}</if>
+			<if test="password != null">and password = #{password}</if>
+			<if test="roleId != null">and role_id = #{roleId}</if>
+			<if test="fullName != null">and full_name = #{fullName}</if>
+			<if test="phone != null">and phone = #{phone}</if>
+			<if test="email != null">and email = #{email}</if>
+			<if test="address != null">and address = #{address}</if>
+			<if test="img != null">and img = #{img}</if>
+			<if test="remark != null">and remark = #{remark}</if>
+			<if test="loginIp != null">and login_ip = #{loginIp}</if>
+			<if test="loginDate != null">and login_date = #{loginDate}</if>
+			<if test="delFlag != null">and del_flag = #{delFlag}</if>
+			<if test="version != null">and version = #{version}</if>
+			<if test="createdAt != null">and created_at = #{createdAt}</if>
+			<if test="updatedAt != null">and updated_at = #{updatedAt}</if>
+			<if test="updatedBy != null">and updated_by = #{updatedBy}</if>
+		</where>
+	</sql>
+
+	<select id="selectById" parameterType="Long" resultType="User">
+		<include refid="sqlSelect" />
+		WHERE
+		id = #{id}
+	</select>
+
+	<select id="selectOne" parameterType="User" resultType="User">
+		<include refid="sqlSelectWhere" />
+		LIMIT 1
+	</select>
+
+	<select id="selectList" parameterType="User" resultType="User">
+		<include refid="sqlSelectWhere" />
+	</select>
+
+	<insert id="insertOne" parameterType="User">
+		INSERT INTO user
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="userName != null">user_name,</if>
+			<if test="password != null">password,</if>
+			<if test="roleId != null">role_id,</if>
+			<if test="fullName != null">full_name,</if>
+			<if test="phone != null">phone,</if>
+			<if test="email != null">email,</if>
+			<if test="address != null">address,</if>
+			<if test="img != null">img,</if>
+			<if test="remark != null">remark,</if>
+			<if test="loginIp != null">login_ip,</if>
+			<if test="loginDate != null">login_date,</if>
+			<if test="delFlag != null">del_flag,</if>
+			<if test="updatedBy != null">updated_by,</if>
+			version,
+			created_at,
+			updated_at
+		</trim>
+		VALUES
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="userName != null">#{userName},</if>
+			<if test="password != null">#{password},</if>
+			<if test="roleId != null">#{roleId},</if>
+			<if test="fullName != null">#{fullName},</if>
+			<if test="phone != null">#{phone},</if>
+			<if test="email != null">#{email},</if>
+			<if test="address != null">#{address},</if>
+			<if test="img != null">#{img},</if>
+			<if test="remark != null">#{remark},</if>
+			<if test="loginIp != null">#{loginIp},</if>
+			<if test="loginDate != null">#{loginDate},</if>
+			<if test="delFlag != null">#{delFlag},</if>
+			<if test="updatedBy != null">#{updatedBy},</if>
+			1,
+			NOW(),
+			NOW()
+		</trim>
+	</insert>
+
+	<update id="update" parameterType="User">
+		UPDATE user
+		<trim prefix="SET" suffixOverrides=",">
+			<if test="userName != null">user_name = #{userName},</if>
+			<if test="password != null">password = #{password},</if>
+			<if test="roleId != null">role_id = #{roleId},</if>
+			<if test="fullName != null">full_name = #{fullName},</if>
+			<if test="phone != null">phone = #{phone},</if>
+			<if test="email != null">email = #{email},</if>
+			<if test="address != null">address = #{address},</if>
+			<if test="img != null">img = #{img},</if>
+			<if test="remark != null">remark = #{remark},</if>
+			<if test="loginIp != null">login_ip = #{loginIp},</if>
+			<if test="loginDate != null">login_date = #{loginDate},</if>
+			<if test="delFlag != null">del_flag = #{delFlag},</if>
+			<if test="updatedBy != null">updated_by = #{updatedBy},</if>
+			version = version + 1,
+			updated_at = NOW()
+		</trim>
+		WHERE id = #{id}
+	</update>
+
+	<delete id="deleteOne">
+		DELETE FROM user WHERE id = #{id}
+	</delete>
+
+	<delete id="deleteList">
+		DELETE FROM user WHERE id IN
+		<foreach item="id" collection="ids" open="(" separator=","
+			close=")">
+			#{id}
+		</foreach>
+	</delete>
+	
+	<select id="f002SearchUser" parameterType="F002SearchUserRequest" resultType="F002SearchUserResponse">
+		SELECT
+		    u.id AS id,
+		    u.user_name AS userName,
+		    u.role_id AS roleId,
+		    u.full_name AS fullName,
+		    u.phone AS phone,
+		    u.email AS email,
+		    u.del_flag AS delFlag,
+		    r.name AS roleName
+		FROM
+		    user u
+		    INNER JOIN role r
+		    ON u.role_id = r.id
+	   <where>
+			<if test="id != null">AND u.id = #{id}</if>
+			<if test="userName != null">
+				<bind name="userNamePattern" value="'%' + userName + '%'" />
+				AND u.user_name LIKE #{userNamePattern}
+			</if>
+			<if test="fullName != null">
+				<bind name="fullNamePattern" value="'%' + fullName + '%'" />
+				AND u.full_name LIKE #{fullNamePattern}
+			</if>
+			<if test="roleIds != null">
+				AND u.role_id IN
+				<foreach item="roleId" collection="roleIds" open="(" separator=","
+					close=")">
+					#{roleId}
+				</foreach>
+			</if>
+		</where>
+		ORDER BY u.id
+	</select>
+
+</mapper>

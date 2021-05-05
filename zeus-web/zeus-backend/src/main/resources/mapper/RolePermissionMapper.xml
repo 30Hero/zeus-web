@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="vn.zeus.web.mapper.RolePermissionMapper">
+	<sql id="sqlSelect">
+		SELECT * FROM role_permission
+	</sql>
+
+	<sql id="sqlSelectWhere">
+		<include refid="sqlSelect"/>
+		<where>
+			<if test="roleId != null">AND role_id = #{roleId}</if>
+			<if test="permissionId != null">AND permission_id = #{permissionId}</if>
+			<if test="displayOperationControl != null">AND display_operation_control = #{displayOperationControl}</if>
+			<if test="version != null">AND version = #{version}</if>
+			<if test="createdAt != null">AND created_at = #{createdAt}</if>
+			<if test="updatedAt != null">AND updated_at = #{updatedAt}</if>
+			<if test="updatedBy != null">AND updated_by = #{updatedBy}</if>
+		</where>
+	</sql>
+
+	<select id="selectById" parameterType="Long" resultType="RolePermission">
+		<include refid="sqlSelect"/>
+		WHERE
+		id = #{id}
+	</select>
+
+	<select id="selectOne" parameterType="RolePermission" resultType="RolePermission">
+		<include refid="sqlSelectWhere"/>
+		LIMIT 1
+	</select>
+
+	 <select id="selectList" parameterType="RolePermission" resultType="RolePermission">
+		<include refid="sqlSelectWhere"/>
+	</select>
+
+	<insert id="insertOne" parameterType="RolePermission">
+		INSERT INTO role_permission
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="permissionId != null">permission_id,</if>
+			<if test="displayOperationControl != null">display_operation_control,</if>
+			<if test="updatedBy != null">updated_by,</if>
+			version,
+			created_at,
+			updated_at
+		</trim>
+		VALUES
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="permissionId != null">#{permissionId},</if>
+			<if test="displayOperationControl != null">#{displayOperationControl},</if>
+			<if test="updatedBy != null">#{updatedBy},</if>
+			1,
+			NOW(),
+			NOW()
+		</trim>
+	</insert>
+
+	<update id="update" parameterType="RolePermission">
+		UPDATE role_permission
+		<trim prefix="SET" suffixOverrides=",">
+			 <if test="permissionId != null">permission_id = #{permissionId}</if>
+			 <if test="displayOperationControl != null">display_operation_control = #{displayOperationControl}</if>
+			 <if test="updatedBy != null">updated_by = #{updatedBy}</if>
+			version = version + 1,
+			updated_at = NOW()
+		</trim>
+		WHERE id = #{id}
+	</update>
+
+	<delete id="deleteOne">
+		 DELETE FROM role_permission WHERE id = #{id}
+	</delete>
+
+	<delete id="deleteList">
+		DELETE FROM role_permission WHERE id IN
+		<foreach item="id" collection="ids" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+	</delete>
+	
+	<select id="selectListPerm" parameterType="Long" resultType="UserPermissionResponse">
+			SELECT
+			    p.*,
+			    rp.permission_id AS permissionId,
+			    rp.display_operation_control 
+			FROM
+			    role_permission AS rp 
+			    INNER JOIN permission AS p 
+			    ON rp.permission_id = p.id
+			WHERE
+		    rp.role_id = #{roleId}
+	</select>
+
+</mapper>
